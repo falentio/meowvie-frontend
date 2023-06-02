@@ -24,6 +24,9 @@ export const handler = (req: Request, ctx: HandlerContext) => {
 	const q = new URL(req.url).searchParams.get("q");
 	const target = new URL("/movie/search", meowvie);
 	q && target.searchParams.set("q", q);
+	if (Deno.env.get("MEOWVIE_REDIRECT")) {
+		return Response.redirect(target, 307);
+	}
 	const start = Date.now();
 	return fetch(target.href).then((res) => {
 		return new Response(res.body, {
