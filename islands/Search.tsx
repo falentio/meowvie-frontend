@@ -89,7 +89,7 @@ interface SearchResultProps {
 	limit: Signal<number>;
 }
 
-const meowvie = new URL(Deno.env.get("MEOWVIE_URL") || "");
+const meowvie = new URL(Deno.env.get("MEOWVIE_ENDPOINT") || "");
 const SearchResult = ({ query, ready, limit }: SearchResultProps) => {
 	if (!ready) {
 		return <Loading></Loading>;
