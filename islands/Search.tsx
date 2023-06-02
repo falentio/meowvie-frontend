@@ -66,9 +66,6 @@ export const Search = () => {
 						onChange={(e) => fast.value = e.currentTarget.checked}
 					/>
 				</label>
-				<span class="w-full">
-					Batas pencarian tersisa: {limit.value}
-				</span>
 			</form>
 			<SearchResult
 				query={debouncedQuery.value}
