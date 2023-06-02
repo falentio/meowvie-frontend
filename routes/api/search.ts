@@ -24,11 +24,13 @@ export const handler = (req: Request, ctx: HandlerContext) => {
 	const q = new URL(req.url).searchParams.get("q");
 	const target = new URL("/movie/search", meowvie);
 	q && target.searchParams.set("q", q);
+	const start = Date.now();
 	return fetch(target.href).then((res) => {
 		return new Response(res.body, {
 			headers: {
 				"x-limit-remain": l.remain.toString(),
 				"cache-control": "no-store",
+				"x-meowvie-response-time": (Date.now() - start).toString(),
 			},
 		});
 	});
