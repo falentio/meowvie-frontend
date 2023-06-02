@@ -85,7 +85,11 @@ const SearchResult = ({ query, fast }: SearchResultProps) => {
 	}
 	const socket = useMemo(() => {
 		const url = new URL("/api/ws", new URL(window.location.href));
-		url.protocol = "ws:";
+		if (url.protocol === "https:") {
+			url.protocol = "wss:";
+		} else {
+			url.protocol = "ws:";
+		}
 		return new WebSocket(url);
 	}, []);
 	const movies = useSignal([] as Record<string, unknown>[]);
