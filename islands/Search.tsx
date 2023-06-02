@@ -18,7 +18,7 @@ export const Search = ({ meowvieEndpoint }: SearchProps) => {
 	const fast = useSignal(false);
 	const limit = useSignal(1);
 	useEffect(() => {
-		const delay = fast.value ? 50 : 350;
+		const delay = fast.value ? 0 : 350;
 		const id = setTimeout(() => {
 			debouncedQuery.value = query.value;
 		}, delay);
