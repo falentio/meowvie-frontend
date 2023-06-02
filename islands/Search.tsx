@@ -30,13 +30,13 @@ export const Search = ({ meowvieEndpoint }: SearchProps) => {
 		<>
 			<form
 				onSubmit={(e) => e.preventDefault()}
-				class="rounded-md shadow p-4 border-blue-500 border-t-4 space-y-2"
+				class="bg-white rounded-md shadow p-4 border-blue-500 border-t-4 space-y-2"
 			>
 				<label class="flex flex-col space-y-2">
 					<span class="text-lg">Judul</span>
 					<div class="flex flex-row  rounded-md overflow-hidden">
 						<input
-							class="bg-gray-100 ring-x w-full h-8 px-2 py-1"
+							class="bg-blue-100 ring-x w-full h-8 px-2 py-1"
 							type="text"
 							value={query.value}
 							placeholder={placeholders[Math.random() * 3 | 0]}
@@ -146,7 +146,7 @@ const Loading = () => {
 	return (
 		<>
 			{Array.from({ length: 3 }).map(() => (
-				<div class="animate-pulse space-y-2 w-full flex flex-col rounded-md shadow-md border-blue-500 border-t-2 inline-flex p-4">
+				<div class="animate-pulse bg-white space-y-2 w-full flex flex-col rounded-md shadow-md border-blue-500 border-t-2 inline-flex p-4">
 					<div class="w-full mx-auto h-6 bg-gray-200"></div>
 					<div class="w-60 mx-auto h-6 bg-gray-200"></div>
 					<div class="w-36 h-3 bg-gray-200"></div>
@@ -181,7 +181,7 @@ interface MovieItemProps {
 
 const MovieItem = ({ movie }: MovieItemProps) => {
 	return (
-		<div class="w-full flex flex-col rounded-md shadow border-blue-500 border-t-2 inline-flex p-4">
+		<div class="w-full bg-white flex flex-col rounded-md shadow border-blue-500 border-t-2 inline-flex p-4">
 			<h2 class="text-lg text-center font-bold">{movie.title}</h2>
 			<div class="flex flex-col gap-1">
 				{groupDownloadUrl(movie.downloadUrl).map((i) => {

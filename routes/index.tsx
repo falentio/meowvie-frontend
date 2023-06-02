@@ -29,7 +29,7 @@ export default function Home({ data: { meowvieEndpoint } }: PageProps) {
 				>
 				</script>
 			</Head>
-			<div class="p-4 mx-auto max-w-screen-md font-['Rubik'] flex flex-col gap-4">
+			<div class="p-4 bg-blue-50 min-h-screen mx-auto max-w-screen-md font-['Rubik'] flex flex-col gap-4">
 				<div class="flex flex-col md:flex-row items-center">
 					<GithubProfile
 						username="falentio"
