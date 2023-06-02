@@ -66,6 +66,7 @@ export const Search = () => {
 						onChange={(e) => fast.value = e.currentTarget.checked}
 					/>
 				</label>
+
 				{limit.value > -1 && (
 					<span class="w-full">
 						Batas pencarian tersisa: {limit.value}
