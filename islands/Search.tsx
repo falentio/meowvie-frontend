@@ -89,6 +89,7 @@ interface SearchResultProps {
 	limit: Signal<number>;
 }
 
+const meowvie = new URL(Deno.env.get("MEOWVIE_URL") || "");
 const SearchResult = ({ query, ready, limit }: SearchResultProps) => {
 	if (!ready) {
 		return <Loading></Loading>;
@@ -99,7 +100,7 @@ const SearchResult = ({ query, ready, limit }: SearchResultProps) => {
 	const movies = useSignal([] as Record<string, unknown>[]);
 	const error = useSignal<Error | null>(null);
 	useEffect(() => {
-		const url = new URL("/api/search", new URL(window.location.href));
+		const url = new URL("/movie/search", meowvie);
 		url.searchParams.set("q", query);
 		fetch(url.href)
 			.then(async (res) => {
