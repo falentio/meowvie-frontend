@@ -8,7 +8,11 @@ const placeholders = [
 	"Full Metal 23",
 ];
 
-export const Search = () => {
+export interface SearchProps {
+	meowvieEndpoint: string;
+}
+
+export const Search = ({ meowvieEndpoint }: SearchProps) => {
 	const query = useSignal("");
 	const debouncedQuery = useSignal("");
 	const fast = useSignal(false);
@@ -78,6 +82,7 @@ export const Search = () => {
 				ready={debouncedQuery.value === query.value}
 				key={debouncedQuery.value}
 				limit={limit}
+				meowvieEndpoint={meowvieEndpoint}
 			/>
 		</>
 	);
@@ -87,9 +92,12 @@ interface SearchResultProps {
 	query: string;
 	ready: boolean;
 	limit: Signal<number>;
+	meowvieEndpoint: string;
 }
 
-const SearchResult = ({ query, ready, limit }: SearchResultProps) => {
+const SearchResult = (
+	{ query, ready, limit, meowvieEndpoint }: SearchResultProps,
+) => {
 	if (!ready) {
 		return <Loading></Loading>;
 	}
@@ -99,7 +107,7 @@ const SearchResult = ({ query, ready, limit }: SearchResultProps) => {
 	const movies = useSignal([] as Record<string, unknown>[]);
 	const error = useSignal<Error | null>(null);
 	useEffect(() => {
-		const url = new URL("/api/search", new URL(window.location.href));
+		const url = new URL("/movie/search", new URL(meowvieEndpoint));
 		url.searchParams.set("q", query);
 		fetch(url.href)
 			.then(async (res) => {

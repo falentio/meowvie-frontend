@@ -4,8 +4,15 @@ import GithubProfile from "../components/GithubProfile.tsx";
 import Teer from "../components/Teer.tsx";
 import GithubButton from "../components/GithubButton.tsx";
 import Search from "../islands/Search.tsx";
+import { HandlerContext, PageProps } from "$fresh/server.ts";
 
-export default function Home() {
+export const handler = (req: Request, ctx: HandlerContext) => {
+	return ctx.render({
+		meowvieEndpoint: Deno.env.get("MEOWVIE_ENDPOINT") || "'",
+	});
+};
+
+export default function Home({ data: { meowvieEndpoint } }: PageProps) {
 	return (
 		<>
 			<Head>
@@ -38,7 +45,7 @@ export default function Home() {
 						</div>
 					</div>
 				</div>
-				<Search />
+				<Search meowvieEndpoint={meowvieEndpoint} />
 			</div>
 		</>
 	);
