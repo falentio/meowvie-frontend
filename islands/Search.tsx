@@ -1,4 +1,4 @@
-import { useSignal } from "@preact/signals";
+import { Signal, useSignal } from "@preact/signals";
 import { useEffect, useState } from "preact/hooks";
 
 const placeholders = [
@@ -11,10 +11,13 @@ const placeholders = [
 export const Search = () => {
 	const query = useSignal("");
 	const debouncedQuery = useSignal("");
+	const fast = useSignal(false);
+	const limit = useSignal(300);
 	useEffect(() => {
+		const delay = fast.value ? 0 : 350;
 		const id = setTimeout(() => {
 			debouncedQuery.value = query.value;
-		}, 350);
+		}, delay);
 		return () => {
 			clearTimeout(id);
 		};
@@ -23,7 +26,7 @@ export const Search = () => {
 		<>
 			<form
 				onSubmit={(e) => e.preventDefault()}
-				class="rounded-md shadow p-4 border-blue-500 border-t-4"
+				class="rounded-md shadow p-4 border-blue-500 border-t-4 space-y-2"
 			>
 				<label class="flex flex-col space-y-2">
 					<span class="text-lg">Judul</span>
@@ -54,10 +57,24 @@ export const Search = () => {
 						</button>
 					</div>
 				</label>
+				<label class="inline-flex items-center h-6 w-full">
+					<span class="flex-auto">Mode Cepat (Fast Mode)</span>
+					<input
+						type="checkbox"
+						class="h-4 w-4 mt-1"
+						checked={fast.value}
+						onChange={(e) => fast.value = e.currentTarget.checked}
+					/>
+				</label>
+				<span class="w-full">
+					Batas pencarian tersisa: {limit.value}
+				</span>
 			</form>
 			<SearchResult
 				query={debouncedQuery.value}
+				ready={debouncedQuery.value === query.value}
 				key={debouncedQuery.value}
+				limit={limit}
 			/>
 		</>
 	);
@@ -65,9 +82,14 @@ export const Search = () => {
 
 interface SearchResultProps {
 	query: string;
+	ready: boolean;
+	limit: Signal<number>;
 }
 
-const SearchResult = ({ query }: SearchResultProps) => {
+const SearchResult = ({ query, ready, limit }: SearchResultProps) => {
+	if (!ready) {
+		return <Loading></Loading>;
+	}
 	if (!query) {
 		return <></>;
 	}
@@ -82,6 +104,7 @@ const SearchResult = ({ query }: SearchResultProps) => {
 					error.value = new Error("failed to get movies");
 				}
 				movies.value = await res.json();
+				limit.value = +(res.headers.get("x-limit-remain") || "0");
 				if (!movies.value.length) {
 					error.value = new Error("failed to get movies");
 				}
