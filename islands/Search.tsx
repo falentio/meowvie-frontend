@@ -66,6 +66,11 @@ export const Search = () => {
 						onChange={(e) => fast.value = e.currentTarget.checked}
 					/>
 				</label>
+				{limit.value > -1 && (
+					<span class="w-full">
+						Batas pencarian tersisa: {limit.value}
+					</span>
+				)}
 			</form>
 			<SearchResult
 				query={debouncedQuery.value}
@@ -101,7 +106,7 @@ const SearchResult = ({ query, ready, limit }: SearchResultProps) => {
 					error.value = new Error("failed to get movies");
 				}
 				movies.value = await res.json();
-				limit.value = +(res.headers.get("x-limit-remain") || "0");
+				limit.value = +(res.headers.get("x-limit-remain") || "-1");
 				if (!movies.value.length) {
 					error.value = new Error("failed to get movies");
 				}
