@@ -12,7 +12,7 @@ export const Search = () => {
 	const query = useSignal("");
 	const debouncedQuery = useSignal("");
 	const fast = useSignal(false);
-	const limit = useSignal(300);
+	const limit = useSignal(1);
 	useEffect(() => {
 		const delay = fast.value ? 0 : 350;
 		const id = setTimeout(() => {
