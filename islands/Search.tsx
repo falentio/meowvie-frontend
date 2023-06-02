@@ -1,5 +1,5 @@
-import { useSignal } from "@preact/signals";
-import { useEffect, useState } from "preact/hooks";
+import { Signal, useSignal } from "@preact/signals";
+import { useEffect, useMemo, useState } from "preact/hooks";
 
 const placeholders = [
 	"One Piece Episode 1063",
@@ -10,6 +10,7 @@ const placeholders = [
 
 export const Search = () => {
 	const query = useSignal("");
+	const fast = useSignal(true);
 	const debouncedQuery = useSignal("");
 	useEffect(() => {
 		const id = setTimeout(() => {
@@ -53,40 +54,87 @@ export const Search = () => {
 							</svg>
 						</button>
 					</div>
+					<label class="flex flex-row w-full items-center">
+						<span class="flex-auto">Mode Cepat (Fast Mode):</span>
+						<input
+							type="checkbox"
+							checked={fast.value}
+							onChange={(e) =>
+								fast.value = e.currentTarget.checked}
+						/>
+					</label>
 				</label>
 			</form>
 			<SearchResult
-				query={debouncedQuery.value}
-				key={debouncedQuery.value}
+				query={fast.value ? query : debouncedQuery}
+				fast={fast.value}
+				key={!fast.value && debouncedQuery.value}
 			/>
 		</>
 	);
 };
 
 interface SearchResultProps {
-	query: string;
+	query: Signal<string>;
+	fast?: boolean;
 }
 
-const SearchResult = ({ query }: SearchResultProps) => {
-	if (!query) {
+const SearchResult = ({ query, fast }: SearchResultProps) => {
+	if (!query.value) {
 		return <></>;
 	}
+	const socket = useMemo(() => {
+		const url = new URL("/api/ws", new URL(window.location.href));
+		url.protocol = "ws:";
+		return new WebSocket(url);
+	}, []);
 	const movies = useSignal([] as Record<string, unknown>[]);
 	const error = useSignal<Error | null>(null);
+	const latency = useSignal(0);
+	useEffect(() => console.log("latency", latency.value), [latency.value]);
 	useEffect(() => {
+		socket.onmessage = (e) => {
+			const data = JSON.parse(e.data);
+			if (data.event === "query" && data.query === query.value) {
+				latency.value = Date.now() - data.start;
+				movies.value = data.movies;
+				if (!data.movies.length) {
+					error.value = new Error("failed to get movies");
+				}
+			}
+			if (data.event === "error") {
+				error.value = new Error("failed to get movies");
+			}
+		};
+		socket.onopen = () => {
+			console.log("connected", socket.url);
+		};
+	}, []);
+	useEffect(() => {
+		error.value = null;
+		if (fast) {
+			socket.send(JSON.stringify({
+				query: query.value,
+				start: Date.now(),
+				event: "query",
+			}));
+			return;
+		}
 		const url = new URL("/api/search", new URL(window.location.href));
-		url.searchParams.set("q", query);
+		url.searchParams.set("q", query.value);
+		const start = Date.now();
 		fetch(url.href)
 			.then(async (res) => {
 				if (!res.ok) {
 					error.value = new Error("failed to get movies");
 				}
+				latency.value = Date.now() - start;
 				movies.value = await res.json();
 				if (!movies.value.length) {
 					error.value = new Error("failed to get movies");
 				}
 			});
-	}, []);
+	}, [query.value]);
 	if (error.value) {
 		return (
 			<div class="text-center w-full flex flex-col rounded-md shadow-md border-red-500 border-t-2 inline-flex p-4">
@@ -101,6 +149,9 @@ const SearchResult = ({ query }: SearchResultProps) => {
 	}
 	return (
 		<div class="grid grid-cols-1 gap-4">
+			<div class=" space-y-2 w-full flex flex-col rounded-md shadow-md border-blue-500 border-t-2 inline-flex p-4">
+				Ping: {latency.value.toLocaleString()}ms
+			</div>
 			{movies.value.map((m) => {
 				return <MovieItem movie={m} />;
 			})}
@@ -111,6 +162,9 @@ const SearchResult = ({ query }: SearchResultProps) => {
 const Loading = () => {
 	return (
 		<>
+			<div class="animate-pulse space-y-2 w-full flex flex-col rounded-md shadow-md border-blue-500 border-t-2 inline-flex p-4">
+				<div class="w-full mx-auto h-6 bg-gray-200"></div>
+			</div>
 			{Array.from({ length: 3 }).map(() => (
 				<div class="animate-pulse space-y-2 w-full flex flex-col rounded-md shadow-md border-blue-500 border-t-2 inline-flex p-4">
 					<div class="w-full mx-auto h-6 bg-gray-200"></div>
