@@ -28,6 +28,12 @@ export default function Home({ data: { meowvieEndpoint } }: PageProps) {
 					data-website-id="e3f74611-aa7d-4ba7-bd9f-f5263945e1be"
 				>
 				</script>
+				<script
+					async
+					src="https://beamanalytics.b-cdn.net/beam.min.js"
+					data-token="5193f823-4dee-4293-9ec3-d83ea3a66ffe"
+				>
+				</script>
 			</Head>
 			<div class="p-4 bg-blue-50 min-h-screen mx-auto max-w-screen-md font-['Rubik'] flex flex-col gap-4">
 				<div class="flex flex-col md:flex-row items-center">
