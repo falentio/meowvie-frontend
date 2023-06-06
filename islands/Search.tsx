@@ -22,7 +22,7 @@ export const Search = ({ meowvieEndpoint, providers }: SearchProps) => {
 	useEffect(() => {
 		const delay = fast.value ? 0 : 350;
 		const id = setTimeout(() => {
-			debouncedQuery.value = (additionalQuery.value + " " + query.value)
+			debouncedQuery.value = (query.value + " " + additionalQuery.value)
 				.trim();
 		}, delay);
 		return () => {
@@ -123,7 +123,7 @@ export const Search = ({ meowvieEndpoint, providers }: SearchProps) => {
 			<SearchResult
 				query={debouncedQuery.value}
 				ready={debouncedQuery.value ===
-					(additionalQuery.value + " " + query.value).trim()}
+					(query.value + " " + additionalQuery.value).trim()}
 				key={debouncedQuery.value}
 				limit={limit}
 				meowvieEndpoint={meowvieEndpoint}
