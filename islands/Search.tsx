@@ -10,22 +10,25 @@ const placeholders = [
 
 export interface SearchProps {
 	meowvieEndpoint: string;
+	providers: string[];
 }
 
-export const Search = ({ meowvieEndpoint }: SearchProps) => {
+export const Search = ({ meowvieEndpoint, providers }: SearchProps) => {
 	const query = useSignal("");
+	const additionalQuery = useSignal("");
 	const debouncedQuery = useSignal("");
 	const fast = useSignal(false);
-	const limit = useSignal(1);
+	const limit = useSignal(-1);
 	useEffect(() => {
 		const delay = fast.value ? 0 : 350;
 		const id = setTimeout(() => {
-			debouncedQuery.value = query.value;
+			debouncedQuery.value = (additionalQuery.value + " " + query.value)
+				.trim();
 		}, delay);
 		return () => {
 			clearTimeout(id);
 		};
-	}, [query.value]);
+	}, [query.value, additionalQuery.value]);
 	return (
 		<>
 			<form
@@ -33,7 +36,7 @@ export const Search = ({ meowvieEndpoint }: SearchProps) => {
 				class="bg-white rounded-md shadow p-4 border-blue-500 border-t-4 space-y-2"
 			>
 				<label class="flex flex-col space-y-2">
-					<span class="text-lg">Judul</span>
+					<h2 class="text-lg font-bold">Judul</h2>
 					<div class="flex flex-row  rounded-md overflow-hidden">
 						<input
 							class="bg-blue-100 ring-x w-full h-8 px-2 py-1"
@@ -61,6 +64,46 @@ export const Search = ({ meowvieEndpoint }: SearchProps) => {
 						</button>
 					</div>
 				</label>
+				<h2 class="text-lg font-bold">Server</h2>
+				<div class="flex flex-row gap-2">
+					{providers.map((p) => (
+						<label class="bg-blue-500 rounded-lg flex flex-col p-2">
+							<span class="uppercase">{p}</span>
+							<input
+								name="provider"
+								type="radio"
+								class="w-4 h-4 mx-auto text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+								onChange={(e) => {
+									if (e.currentTarget.checked) {
+										additionalQuery
+											.value = " +Provider:" + p + "^0.2";
+									}
+								}}
+							/>
+						</label>
+					))}
+					<button
+						onClick={() => {
+							const r = document.querySelector<HTMLInputElement>(
+								"input[name=provider]:checked",
+							);
+							r && (r.checked = false);
+							additionalQuery.value = "";
+						}}
+						class="bg-red-500 w-12 items-center justify-center inline-flex rounded-lg flex flex-col p-2"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-6 w-6"
+							viewBox="0 0 24 24"
+						>
+							<path
+								fill="currentColor"
+								d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+							/>
+						</svg>
+					</button>
+				</div>
 				<label class="inline-flex items-center h-6 w-full">
 					<span class="flex-auto">Mode Cepat (Fast Mode)</span>
 					<input
@@ -79,7 +122,8 @@ export const Search = ({ meowvieEndpoint }: SearchProps) => {
 			</form>
 			<SearchResult
 				query={debouncedQuery.value}
-				ready={debouncedQuery.value === query.value}
+				ready={debouncedQuery.value ===
+					(additionalQuery.value + " " + query.value).trim()}
 				key={debouncedQuery.value}
 				limit={limit}
 				meowvieEndpoint={meowvieEndpoint}
@@ -107,7 +151,8 @@ const SearchResult = (
 	const movies = useSignal([] as Record<string, unknown>[]);
 	const error = useSignal<Error | null>(null);
 	useEffect(() => {
-		const url = new URL("/movie/search", new URL(meowvieEndpoint));
+		const meowvie = new URL(meowvieEndpoint);
+		const url = new URL("/movie/search", meowvie);
 		url.searchParams.set("q", query);
 		fetch(url.href)
 			.then(async (res) => {

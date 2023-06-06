@@ -6,13 +6,31 @@ import GithubButton from "../components/GithubButton.tsx";
 import Search from "../islands/Search.tsx";
 import { HandlerContext, PageProps } from "$fresh/server.ts";
 
-export const handler = (req: Request, ctx: HandlerContext) => {
+const meowvie = new URL(
+	Deno.env.get("MEOWVIE_ENDPOINT") || "http://localhost:8080",
+);
+
+let p = null as unknown;
+const getProviders = (): PromiseLike<unknown> => {
+	return p ??= fetch(new URL("/movie/provider", meowvie).href)
+		.then((r) => r.json())
+		.then((d) => {
+			setTimeout(() => p = null);
+			return d;
+		}) as any;
+};
+
+export const handler = async (req: Request, ctx: HandlerContext) => {
+	const providers = await getProviders();
 	return ctx.render({
+		providers,
 		meowvieEndpoint: Deno.env.get("MEOWVIE_ENDPOINT") || "'",
 	});
 };
 
-export default function Home({ data: { meowvieEndpoint } }: PageProps) {
+export default function Home(
+	{ data: { meowvieEndpoint, providers } }: PageProps,
+) {
 	return (
 		<>
 			<Head>
@@ -51,7 +69,10 @@ export default function Home({ data: { meowvieEndpoint } }: PageProps) {
 						</div>
 					</div>
 				</div>
-				<Search meowvieEndpoint={meowvieEndpoint} />
+				<Search
+					meowvieEndpoint={meowvieEndpoint}
+					providers={providers}
+				/>
 			</div>
 		</>
 	);
