@@ -189,10 +189,10 @@ const MovieItem = ({ movie }: MovieItemProps) => {
 			<a
 				target="_blank"
 				href={"/image/" + movie.id}
-				loading="lazy"
 				class="w-full h-48 overflow-hidden inline-flex"
 			>
 				<img
+					loading="lazy"
 					src={"/image/" + movie.id}
 					class="mx-auto object-contain rounded-lg"
 				/>
