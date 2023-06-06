@@ -147,27 +147,31 @@ const Loading = () => {
 		<>
 			{Array.from({ length: 3 }).map(() => (
 				<div class="animate-pulse bg-white space-y-2 w-full flex flex-col rounded-md shadow-md border-blue-500 border-t-2 inline-flex p-4">
-					<div class="w-full mx-auto h-6 bg-gray-200"></div>
-					<div class="w-60 mx-auto h-6 bg-gray-200"></div>
-					<div class="w-36 h-3 bg-gray-200"></div>
-					<div class="flex flex-row flex-wrap gap-2 mb-2">
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
+					<div class="w-full justify-center inline-flex">
+						<div class="bg-gray-200 h-48 w-32 rounded-lg"></div>
 					</div>
-					<div class="w-36 h-3 bg-gray-200"></div>
+					<div class="h-6 w-full font-bold bg-gray-200 text-transparent">
+						one piece episode 1064 subtitle bahasa indoenesia
+					</div>
+					<div class="w-36 h-5 bg-gray-200"></div>
 					<div class="flex flex-row flex-wrap gap-2 mb-2">
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
-						<div class="rounded bg-gray-200 h-6 w-16"></div>
+						<div class="rounded bg-gray-200 h-8 w-14"></div>
+						<div class="rounded bg-gray-200 h-8 w-16"></div>
+						<div class="rounded bg-gray-200 h-8 w-20"></div>
+						<div class="rounded bg-gray-200 h-8 w-16"></div>
+						<div class="rounded bg-gray-200 h-8 w-16"></div>
+						<div class="rounded bg-gray-200 h-8 w-18"></div>
+						<div class="rounded bg-gray-200 h-8 w-16"></div>
+					</div>
+					<div class="w-36 h-5 bg-gray-200"></div>
+					<div class="flex flex-row flex-wrap gap-2 mb-2">
+						<div class="rounded bg-gray-200 h-8 w-16"></div>
+						<div class="rounded bg-gray-200 h-8 w-20"></div>
+						<div class="rounded bg-gray-200 h-8 w-14"></div>
+						<div class="rounded bg-gray-200 h-8 w-16"></div>
+						<div class="rounded bg-gray-200 h-8 w-18"></div>
+						<div class="rounded bg-gray-200 h-8 w-16"></div>
+						<div class="rounded bg-gray-200 h-8 w-20"></div>
 					</div>
 				</div>
 			))}
@@ -182,6 +186,17 @@ interface MovieItemProps {
 const MovieItem = ({ movie }: MovieItemProps) => {
 	return (
 		<div class="w-full bg-white flex flex-col rounded-md shadow border-blue-500 border-t-2 inline-flex p-4">
+			<a
+				target="_blank"
+				href={"/image/" + movie.id}
+				class="w-full h-48 overflow-hidden inline-flex"
+			>
+				<img
+					src={"/image/" + movie.id}
+					class="mx-auto object-contain rounded-lg"
+				/>
+			</a>
+
 			<h2 class="text-lg text-center font-bold">{movie.title}</h2>
 			<div class="flex flex-col gap-1">
 				{groupDownloadUrl(movie.downloadUrl).map((i) => {
