@@ -20,6 +20,7 @@ export const Search = ({ meowvieEndpoint, providers }: SearchProps) => {
 	const fast = useSignal(false);
 	const limit = useSignal(-1);
 	useEffect(() => {
+		console.log(additionalQuery.value);
 		const delay = fast.value ? 0 : 350;
 		const id = setTimeout(() => {
 			debouncedQuery.value = (query.value + " " + additionalQuery.value)
@@ -76,7 +77,8 @@ export const Search = ({ meowvieEndpoint, providers }: SearchProps) => {
 								onChange={(e) => {
 									if (e.currentTarget.checked) {
 										additionalQuery
-											.value = " +Provider:" + p + "^0.2";
+											.value = " +Provider:" + p +
+												"^0.2127901230";
 									}
 								}}
 							/>
