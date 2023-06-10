@@ -65,7 +65,7 @@ export const Search = ({ meowvieEndpoint, providers }: SearchProps) => {
 					</div>
 				</label>
 				<h2 class="text-lg font-bold">Server</h2>
-				<div class="flex flex-row gap-2">
+				<div class="flex flex-row flex-wrap gap-2">
 					{providers.map((p) => (
 						<label class="bg-blue-500 rounded-lg flex flex-col p-2">
 							<span class="uppercase">{p}</span>
