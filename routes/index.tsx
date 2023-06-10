@@ -69,6 +69,16 @@ export default function Home(
 						</div>
 					</div>
 				</div>
+				<div class="bg-white space-y-2 w-full flex flex-col rounded-md shadow-md border-blue-500 border-t-2 inline-flex p-4">
+					kalian dapat melakukan voting penambahan source pada link
+					berikut
+					<a
+						class="text-blue-500 hover:text-blue-700 visited:text-purple-700 underline"
+						href="https://vote.falentio.com/v/wokowe"
+					>
+						https://vote.falentio.com/v/wokowe
+					</a>
+				</div>
 				<Search
 					meowvieEndpoint={meowvieEndpoint}
 					providers={providers}
