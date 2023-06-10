@@ -15,8 +15,8 @@ const getProviders = (): PromiseLike<unknown> => {
 	return p ??= fetch(new URL("/movie/provider", meowvie).href)
 		.then((r) => r.json())
 		.then((d) => {
-			setTimeout(() => p = null);
-			return d;
+			setTimeout(() => p = null, 60000);
+			return d?.sort();
 		}) as any;
 };
 
