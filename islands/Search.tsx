@@ -67,17 +67,17 @@ export const Search = ({ meowvieEndpoint, providers }: SearchProps) => {
 				<h2 class="text-lg font-bold">Source</h2>
 				<div class="flex flex-row flex-wrap gap-2">
 					{providers.map((p) => (
-						<label class="bg-blue-500 rounded-lg flex flex-col p-2">
+						<label class="bg-blue-200 text-blue-900 rounded-lg flex flex-col p-2">
 							<span class="uppercase">{p}</span>
 							<input
 								name="provider"
 								type="radio"
-								class="w-4 h-4 mx-auto text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+								class="w-4 h-4 mx-auto bg-blue-200 text-blue-900  border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 								onChange={(e) => {
 									if (e.currentTarget.checked) {
 										additionalQuery
 											.value = " +Provider:" + p +
-												"^0.5127901230";
+												"^0.512";
 									}
 								}}
 							/>
@@ -273,7 +273,7 @@ const GroupUrl = ({ urls, name }: GroupUrlProps) => {
 					return (
 						<a
 							target="_blank"
-							class="ring-blue-500 ring-2 p-1 hover:text-white rounded hover:bg-blue-500"
+							class="bg-blue-200 text-blue-900 p-1 hover:text-white rounded hover:bg-blue-500"
 							href={url}
 						>
 							{server}
